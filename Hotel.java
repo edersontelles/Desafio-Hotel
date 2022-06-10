@@ -200,7 +200,8 @@ public class Hotel {
 	}
 
 	public static void editarCliente() {
-		Scanner teclado = new Scanner(System.in);
+		ArrayList<Integer> arrListaClientes = new ArrayList<>();
+		Boolean opcaoValida = false;
 
 		if (arrClientes.size() == 0) {
 			System.out.println("NÃO HÁ CLIENTE CADASTRADO!");
@@ -209,15 +210,27 @@ public class Hotel {
 
 				if (arrClientes.get(i) != null) {
 					System.out.println(arrClientes.get(i).getId() + " - " + arrClientes.get(i).getNome());
+					arrListaClientes.add(arrClientes.get(i).getId());// guardar ids para verificar no if
 				}
-
 			}
-			int numeroCliente = teclado.nextInt();
+			System.out.print("Digite nº do cliente: ");
+			int numeroCliente = new Scanner(System.in).nextInt();
 
-			System.out.print("Nome: " + arrClientes.get(numeroCliente).getNome() + " alterar para: ");
-			arrClientes.get(numeroCliente).setNome(teclado.next());
-			System.out.print("Fumante: " + arrClientes.get(numeroCliente).getNome() + " alterar para: ");
-			arrClientes.get(numeroCliente).setFumante(new Scanner(System.in).nextBoolean());
+			for (int i = 0; i < arrListaClientes.size(); i++) {
+				if (numeroCliente == arrListaClientes.get(i)) {
+					System.out.print("Nome: " + arrClientes.get(numeroCliente).getNome() + " alterar para: ");
+					arrClientes.get(numeroCliente).setNome(new Scanner(System.in).next());
+					System.out.print("Fumante: " + arrClientes.get(numeroCliente).getFumante() + " alterar para: ");
+					arrClientes.get(numeroCliente).setFumante(new Scanner(System.in).nextBoolean());
+					opcaoValida = true;
+					break;
+				}
+			}
+			if (opcaoValida != true) {
+				System.out.println("\n------------------------------------------------------------");
+				System.out.println("Nº DO CLIENTE INVALIDO!");
+				System.out.println("------------------------------------------------------------");
+			}
 		}
 	}
 
