@@ -11,6 +11,7 @@ public class Cliente {
 	
 	private String nome, dataNs, email, cidade, uf;
 	private Boolean fumanteCliente, checkInFeito;
+	private Integer telefone, id;
 	
 	public Boolean getCheckInFeito() {
 		return checkInFeito;
@@ -18,8 +19,6 @@ public class Cliente {
 	public void setCheckInFeito(Boolean checkInFeito) {
 		this.checkInFeito = checkInFeito;
 	}
-	private Integer telefone, id;
-	
 	
 	public Integer getId() {
 		return id;

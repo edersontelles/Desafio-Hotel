@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.naming.event.ObjectChangeListener;
+
 /**
  * @author Ederson
  *
@@ -31,6 +33,7 @@ public class Hotel {
 		Scanner teclado = new Scanner(System.in);
 
 		while (menu) {
+
 			System.out.println("____________________________________________");
 			System.out.println("_______________                _____________");
 			System.out.println("______________( MENU PRINCIPAL )____________\n");
@@ -329,69 +332,79 @@ public class Hotel {
 	}
 
 	public static void fazerCheckIn() {
-		Check checkIn = new Check();
-		Integer idCliente, idQuarto = null;
 
-		// listar clientes sem check-in
-		for (int i = 0; i < arrClientes.size(); i++) {
-			if (arrClientes.get(i).getCheckInFeito() == false) {
-				System.out.println(arrClientes.get(i).getId() + " - " + arrClientes.get(i).getNome());
-			}
-		}
-		System.out.print("Selecione nº do Cliente: ");
-		idCliente = new Scanner(System.in).nextInt();
-
-		// verificar quartos disponiveis
-		if (arrQuartos.size() == 0) {
-			System.out.println("NÃO HÁ QUARTO CADASTRADO!");
+		if (arrClientes.size() == 0 || arrQuartos.size() == 0) {
+			System.out.println("\nNÃO HÁ CLIENTE OU QUARTO CADASTRADO!");
 		} else {
-			for (int i = 0; i < arrQuartos.size(); i++) {
-				// Verifica se tem quarto disponivel & se cliente e quarto tem a mesma categoria
-				// (fumante/não fumante)
-				if (arrQuartos.get(i).getDisponive().equals(true)
-						&& arrQuartos.get(i).getFumante().equals(arrClientes.get(idCliente).getFumante())) {
-					idQuarto = arrQuartos.get(i).getId();
-					break;
+
+			Check checkIn = new Check();
+			Integer idCliente, idQuarto = null;
+
+			// listar clientes sem check-in
+			for (int i = 0; i < arrClientes.size(); i++) {
+				if (arrClientes.get(i).getCheckInFeito() == false) {
+					System.out.println(arrClientes.get(i).getId() + " - " + arrClientes.get(i).getNome());
 				}
 			}
+			System.out.print("Selecione nº do Cliente: ");
+			idCliente = new Scanner(System.in).nextInt();
 
-			if (idQuarto != null) {
-				checkIn.setIdCliente(idCliente);
-				arrClientes.get(idCliente).setCheckInFeito(true);
-
-				checkIn.setIdQuarto(idQuarto);
-				arrQuartos.get(idQuarto).setDisponive(false);
-
-				arrCheckIn.add(checkIn);
-				System.out.println("\nCHECK-IN REALIZADO COM SUCESSO!");
+			// verificar quartos disponiveis
+			if (arrQuartos.size() == 0) {
+				System.out.println("NÃO HÁ QUARTO CADASTRADO!");
 			} else {
-				System.out.println("\nNÃO HÁ QUARTO DISPONIVE!");
+				for (int i = 0; i < arrQuartos.size(); i++) {
+					// Verifica se tem quarto disponivel & se cliente e quarto tem a mesma categoria
+					// (fumante/não fumante)
+					if (arrQuartos.get(i).getDisponive().equals(true)
+							&& arrQuartos.get(i).getFumante().equals(arrClientes.get(idCliente).getFumante())) {
+						idQuarto = arrQuartos.get(i).getId();
+						break;
+					}
+				}
+
+				if (idQuarto != null) {
+					checkIn.setIdCliente(idCliente);
+					arrClientes.get(idCliente).setCheckInFeito(true);
+
+					checkIn.setIdQuarto(idQuarto);
+					arrQuartos.get(idQuarto).setDisponive(false);
+
+					arrCheckIn.add(checkIn);
+					System.out.println("\nCHECK-IN REALIZADO COM SUCESSO!");
+				} else {
+					System.out.println("\nNÃO HÁ QUARTO DISPONIVE!");
+				}
 			}
 		}
 	}
 
 	public static void fazerCheckOut() {
 
-		Integer idCliente;
+		if(arrClientes.size() == 0 || arrQuartos.size() == 0) {
+			System.out.println("\nNÃO HÁ CLIENTE OU QUARTO CADASTRADO!");
+		}else {
+			Integer idCliente;
 
-		// listar clientes com check-in
-		for (int i = 0; i < arrClientes.size(); i++) {
-			if (arrClientes.get(i).getCheckInFeito() == true) {
-				System.out.println(arrClientes.get(i).getId() + " - " + arrClientes.get(i).getNome());
+			// listar clientes com check-in
+			for (int i = 0; i < arrClientes.size(); i++) {
+				if (arrClientes.get(i).getCheckInFeito() == true) {
+					System.out.println(arrClientes.get(i).getId() + " - " + arrClientes.get(i).getNome());
+				}
 			}
-		}
-		System.out.print("Selecione nº do Cliente: ");
-		idCliente = new Scanner(System.in).nextInt();
+			System.out.print("Selecione nº do Cliente: ");
+			idCliente = new Scanner(System.in).nextInt();
 
-		// pegar posição do cliente na lista de arrCheckIn conforme idCliente
-		for (int i = 0; i < arrCheckIn.size(); i++) {
-			if (arrCheckIn.get(i).getIdCliente().equals(idCliente)) {
-				// arrCheckIn.get(i).getIdQuarto();
-				arrClientes.get(idCliente).setCheckInFeito(false);
-				arrQuartos.get(arrCheckIn.get(i).getIdQuarto()).setDisponive(true);
-				arrCheckIn.remove(i);
-				System.out.println("\nCHECK-OUT REALIZADO COM SUCESSO!");
-				break;
+			// pegar posição do cliente na lista de arrCheckIn conforme idCliente
+			for (int i = 0; i < arrCheckIn.size(); i++) {
+				if (arrCheckIn.get(i).getIdCliente().equals(idCliente)) {
+					// arrCheckIn.get(i).getIdQuarto();
+					arrClientes.get(idCliente).setCheckInFeito(false);
+					arrQuartos.get(arrCheckIn.get(i).getIdQuarto()).setDisponive(true);
+					arrCheckIn.remove(i);
+					System.out.println("\nCHECK-OUT REALIZADO COM SUCESSO!");
+					break;
+				}
 			}
 		}
 	}
